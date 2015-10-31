@@ -1,0 +1,651 @@
+% !TEX TS-program = pdflatex
+% !TEX encoding = UTF-8 Unicode
+
+% This is a simple template for a LaTeX document using the "article" class.
+% See "book", "report", "letter" for other types of document.
+
+\documentclass[12pt]{article} % use larger type; default would be 10pt
+
+\usepackage[utf8]{inputenc} % set input encoding (not needed with XeLaTeX)
+
+%%% Examples of Article customizations
+% These packages are optional, depending whether you want the features they provide.
+% See the LaTeX Companion or other references for full information.
+
+%%% PAGE DIMENSIONS
+\usepackage{geometry} % to change the page dimensions
+\geometry{a4paper} % or letterpaper (US) or a5paper or....
+% \geometry{margin=2in} % for example, change the margins to 2 inches all round
+% \geometry{landscape} % set up the page for landscape
+%   read geometry.pdf for detailed page layout information
+\setlength{\parindent}{0pt}
+
+
+% \usepackage[parfill]{parskip} % Activate to begin paragraphs with an empty line rather than an indent
+
+%%% PACKAGES
+\usepackage{booktabs} % for much better looking tables
+\usepackage{array} % for better arrays (eg matrices) in maths
+\usepackage{paralist} % very flexible & customisable lists (eg. enumerate/itemize, etc.)
+\usepackage{verbatim} % adds environment for commenting out blocks of text & for better verbatim
+\usepackage{subfig} % make it possible to include more than one captioned figure/table in a single float
+\usepackage{amsmath} %amsmath is part of AMS-LATEX bundles
+\usepackage{amssymb}%symble
+\usepackage{amsfonts}%font
+\usepackage{amsthm}%provide theorem package
+\usepackage{graphicx}
+\usepackage{listings}
+% These packages are all incorporated in the memoir class to one degree or another...
+\usepackage[retainorgcmds]{IEEEtrantools} %In order to use IEEEeqnarray Environment
+\usepackage{graphicx} % support the \includegraphics command and options
+%\usepackage{indentfirst}%
+
+%%% HEADERS & FOOTERS
+\usepackage{fancyhdr} % This should be set AFTER setting up the page geometry
+\pagestyle{fancy} % options: empty , plain , fancy
+\renewcommand{\headrulewidth}{0pt} % customise the layout...
+\lhead{}\chead{}\rhead{}
+\lfoot{}\cfoot{\thepage}\rfoot{}
+
+%%% SECTION TITLE APPEARANCE
+\usepackage{sectsty}
+\allsectionsfont{\sffamily\mdseries\upshape} % (See the fntguide.pdf for font help)
+% (This matches ConTeXt defaults)
+
+%%% ToC (table of contents) APPEARANCE
+\usepackage[nottoc,notlof,notlot]{tocbibind} % Put the bibliography in the ToC
+\usepackage[titles,subfigure]{tocloft} % Alter the style of the Table of Contents
+\renewcommand{\cftsecfont}{\rmfamily\mdseries\upshape}
+\renewcommand{\cftsecpagefont}{\rmfamily\mdseries\upshape} % No bold!
+
+%%%DEFINE UPRIGHT FONT MISSING FUNCTIONS????????????????????
+\DeclareMathOperator{\argh}{argh}
+\DeclareMathOperator*{\nut}{Nut}
+
+%%%DEFINE NEW COMMANDS
+\newcommand{\ud}{\,\mathrm{d}}
+
+%%%DEFINE THEOREM
+%\theoremstyle{definition} 
+\theoremstyle{definition}\newtheorem{law}{Law}
+\theoremstyle{plain}\newtheorem{jury}[law]{Jury}
+\theoremstyle{remark}\newtheorem{juu}{Juu}
+\theoremstyle{definition}\newtheorem{kuu}[law]{Kuu}
+\theoremstyle{definition}\newtheorem{muu}{Muu}[section]
+\theoremstyle{definition}\newtheorem{honoluu}{Honoluu}[section]
+\theoremstyle{definition}\newtheorem{konoluu}[muu]{Konoluu}
+
+%%% END Article customizations
+
+%%% The "real" document content comes below...
+
+\title{\textbf{ \begin{LARGE}Neural Network\end{LARGE}}\\ [0ex]\begin{Large} Homework 1 \end{Large} }
+\author{Ning Ma, A50055399}
+\date{} % Activate to display a given date or no date (if empty),
+         % otherwise the current date is printed 
+
+\begin{document}
+\maketitle
+\section{Perceptron}
+
+{\bf 1.}
+For 2-D, the decision boundary is 
+\begin{equation}
+w_1x_1 + w_2x_2 = \theta
+\end{equation}
+Assume ${x}$ is a point on the boundary. So, we have 
+\begin{equation}
+w^Tx= \theta
+\end{equation}
+Let $x^0$ be the point from which we want to compute the distance to the line. So, the distance is 
+\begin{IEEEeqnarray*}{rCl}
+\frac{w^\top(x - x^0)}{||w||_2} =  \frac{w^\top x- w^\top x^0}{||w||_2}
+\end{IEEEeqnarray*}
+So, the distance from the origin to the boundary is
+\begin{equation}
+\frac{w^\top x - w^\top0}{||w||_2} = \frac{w^\top x}{||w||_2}
+\end{equation}
+
+{\bf 2.}
+\begin{enumerate}
+\item[(a)] 
+The learning rule is 
+\begin{equation}
+w_j(t + 1) = w_j(t) + \alpha (Teacher - Output)x_j
+\end{equation}
+
+\item[(b)] 
+The perceptron learning goes as the following:
+\begin{table}[htb]
+\caption{perceptron learning for NAND}
+\centering
+\begin{tabular}{|c|c|c|c|c|c|c|c|}
+\specialrule{.2em}{0em}{0.2em} 
+$x_1$ & $x_2$ & $w_1$ & $w_2$ & $ Net $ & $Output$ & $Teacher$ & $ theta $\\
+\hline
+1 & 1 & 0 & 0 & 0 & 1 & 0 & 0\\
+\hline
+0 & 0 & -1 & -1 & 0 & 0 & 1 & 1\\
+\hline
+0 & 1 & -1 & -1 & -1 & 0 & 1 & 0\\
+\hline
+1 & 1 & -1 & 0 & -1 & 1 & 0 & -1\\
+\hline
+1 & 0 & -2 & -1 & -2 & 0 & 1 & 0\\
+\hline
+- & - & -1 & -1 & - & - & - & -1\\
+\hline
+\end{tabular}
+\label{table:CPTsPolytree}
+\end{table}\\
+The final weights and threshold are $w_1$ = -1, $w_2$ = -1, $theta$ = -1.
+
+\item[(c)]
+This solution is not unique. For example, $w_1 = -2$, $w_2 = -2$, and $\theta = -2$ is another solution. Namely, the solution will  not change if you add same constant to all the parameters.
+
+\item[(d)]
+\begin{enumerate}
+\item[i.]
+See code file 'readProcessData.m' for details. After preprocessing, the data are unitless. If the data have different units, different data points may have very different numerical value but actually represent the same physical measurement.
+ Secondly, if the original data is very large, this preprocessing may avoid overflowing and let the learning converge appropriately.
+ \item[ii.]
+ According to Figure~\ref{scatterPlot}, the class are linearly separable for most feature spaces.
+ 
+ \begin{figure}[h!]
+\centering
+\includegraphics[width=1\textwidth]{scatterPlot.eps}
+\caption{scatter plot}
+\label{scatterPlot}
+\end{figure}
+
+\item[iii.]
+See code for more details. For the stopping criteria, I choose to stop when the iteration reaches 1000 or the error drops below 0.05, whichever occurs first.
+\item[iv.]
+The test error rate is just 3.33\%
+\item[v.]
+my learning rate is 0.05. When I slightly increase the learning rate, the perceptron learning will converge a little bit fast and vice versa. However, if my learning rate is too large, the learning procedure will not converge.
+\end{enumerate}
+\end{enumerate}
+
+
+\section{Logistic and Softmax Regression}
+{\bf 1.}
+\begin{equation}
+E(\theta) = -\sum_{i = 1}^N\big(y^{(i)}\mathrm{log}(h_{\theta}(x^{(i)})) + (1 - y^{(i)})\mathrm{log}(1 - h_{\theta}(x^{(i)}))\big)
+\end{equation}
+
+\begin{equation}
+\frac{\partial E(\theta)}{\partial \theta_j}  = \sum_{i = 1}^N\frac{\partial E(\theta)}{\partial h_{\theta}(x^{(i)})}\frac{\partial h_{\theta}(x^{(i)})}{\partial \theta_j}
+\end{equation}
+where
+\begin{equation}
+ \frac{\partial E(\theta)}{\partial h_{\theta}(x^{(i)})} = -\frac{y^{(i)} - h_{\theta}(x^{(i)})}{h_\theta(x^{(i)})( 1- h_\theta(x^{(i)}))}
+\end{equation}
+and
+\begin{equation}
+\frac{\partial h_{\theta}(x^{(i)})}{\partial \theta_j} = h_\theta(x^{(i)})(1 - h_\theta(x^{(i)}))x_j^{(i)}
+\end{equation}
+Thus, we have
+\begin{IEEEeqnarray}{rCl}
+\frac{\partial E(\theta)}{\partial \theta_j} & = & \sum_{i = 1}^N\frac{\partial E(\theta)}{\partial h_{\theta}(x^{(i)})}\frac{\partial h_{\theta}(x^{(i)})}{\partial \theta_j}\\
+& = & \sum_{i = 1}^N(h_\theta(x^{(i)}) - y_i)x_j^{(i)}
+\end{IEEEeqnarray}
+
+{\bf 2.}
+\begin{IEEEeqnarray}{rCl}
+E(\theta) & = & -\sum_{i = 1}^N\sum_{l = 0}^K1_{\{y^{(i)} = l\}}\mathrm{log}\frac{{\mathrm{exp}(\theta^{(l)}}^\top x^{(i)})}{\sum_{j = 0}^K\mathrm{exp}({\theta^{(j)}}^\top x^{(i)})}\\
+& = & -\sum_{i = 1}^N\sum_{l = 0}^K1_{\{y^{(i)} = l\}}\big ({\theta^{(l)}}^\top x^{(i)} - \mathrm{log} \sum_{j = 0}^K\mathrm{exp}({\theta^{(j)}}^\top x^{(i)})\big )
+\end{IEEEeqnarray}
+So, we have 
+\begin{IEEEeqnarray}{rCl}
+\frac{\partial E(\theta)}{\partial \theta^{(k)}} & = & -\sum_{i = 1}^N\big [1_{\{y^{(i)} = k\}}x^{(i)} -  \sum_{l = 0}^{K}1_{\{y^{(i)} = l\}} \frac{x^{(i)}\mathrm{exp}({\theta^{(k)}}^\top x^{(i)})}{\sum_{j = 0}^K\mathrm{exp}({\theta^{(j)}}^\top x^{(i)})}\big ]\\
+& = & -\sum_{i = 1}^N\big [1_{\{y^{(i)} = k\}}x^{(i)} - \frac{x^{(i)}\mathrm{exp}({\theta^{(k)}}^\top x^{(i)})}{\sum_{j = 0}^K\mathrm{exp}({\theta^{(j)}}^\top x^{(i)})}\big ]\\
+& = & -\sum_{i = 1}^N \big [x^{(i)}\big (1_{\{y^{(i)} = k\}} - P(y^{(i)} = k | x^{(i)};\theta) \big )\big]
+\end{IEEEeqnarray}
+{\bf 3.}
+
+See code file 'readOneMNIST.m' for details. Before appending 1 to the x-vector, I divide each vector by 255 to avoid overflowing.
+
+{\bf 4.}
+\begin{enumerate}
+\item[(a)]
+The result of the 10 2-way classification is in Table ~\ref{table:2-way}
+\begin{table}[htb]
+\caption{10 2-way classification}
+\centering
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|}
+\specialrule{.2em}{0em}{0.2em} 
+$0-all$ & $1-all$ & $2-all$ & $3-all$ & $ 4-all $ & $5-all$ & $6-all$ & $ 7-all $ & $ 8-all $ & $ 9-all$\\
+\hline
+0.977 & 0.982 & 0.957 & 0.951 & 0.957 & 0.950 & 0.960 & 0.955 & 0.921 & 0.935\\
+\hline
+\end{tabular}
+\label{table:2-way}
+\end{table}
+\item[(b)]
+The overall test accuracy is 0.846.
+\end{enumerate}
+
+{\bf 5.}
+\begin{enumerate}
+\item[(a)]
+See Figure ~\ref{fig:accuracyVsIte}. We can see that the training accuracy increases as the iteration number.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=1\textwidth]{accuracyVsIteration.eps}
+\caption{Accuracy vs. Iteration}
+\label{fig:accuracyVsIte}
+\end{figure}
+
+\item[(b)]
+The test accuracy on the test data is 0.860.
+
+\item[(c)]
+The test accuracy is a little bit hight than the one-vs-all logistic regression. It is because softmax regression can directly computes the probability of each class, and then vote for the one with highest probability. So, softmax regression will provide a little bit more accurate result. 
+\end{enumerate}
+
+
+
+\newpage
+\section{Appendix}
+The following is the  source code\\
+\subsection{Code for Peceptron}
+\begin{lstlisting}
+%%%%%%%%%%%%%%getProcessData.m%%%%%%%%%%%%%%%%%%%
+%dependency: readProcessData
+[trainData, trainLabel] = readProcessData('./iris/iris_train.data');
+[testData, testLabel] = readProcessData('./iris/iris_test.data');
+save('processedData.mat', 'trainData', 'trainLabel', 'testData', 'testLabel');
+
+%%%%%%%%%%%%%%%%readProcessData.m%%%%%%%%%%%%%%%%%
+function [data, label] = readProcessData(file)
+f = fopen(file);
+rawData = textscan(f,'%f %f %f %f %s','Delimiter',',');
+data = cell2mat(rawData(:,1:4)); %ignor
+label = cellfun(@(x) strcmp(x,'Iris-setosa'),rawData{:,5});
+
+meanData = repmat(mean(data,1), size(data,1),1);
+stdData = repmat(std(data,1),size(data,1),1);
+
+data = (data - meanData)./ stdData;
+data = [ones(size(data,1),1),data];
+
+%%%%%%%%%%%%%HW1Perceptron.m%%%%%%%%%%%
+%dependency: perceptronLearning.m, perceptronrror.m
+load('processedData.mat');
+
+%(d) ii.
+attributes = {'sepalLength', 'sepalWidth','petalLength','petalWidth'};
+
+fig = figure();
+subIndex = 1;
+for i = 1:(length(attributes) - 1)
+    for j = (i + 1) : length(attributes)
+    subplot(3,2,subIndex);
+    colorVec = 10*(trainLabel == 1) + 250*(trainLabel == 0);
+    scatter(trainData(:,i + 1), trainData(:,j + 1), 5, colorVec);
+    xlabel(attributes{i});
+    ylabel(attributes{j});
+    subIndex = subIndex + 1;
+    end
+end
+
+saveas(fig,'./figure/scatterPlot.fig');
+
+%%(d) iii.
+w0 = 1- rand(size(trainData,2),1);
+w = perceptronLearning(trainData, trainLabel, w0);
+
+%%(d) iv
+error = perceptronError(testData, testLabel, w);
+save('testError','error');
+
+
+%%%%%%%%%%%%%%%perceptronLearning.m%%%%%%%%%%%%%%%%%
+function w = perceptronLearning(data, label, w0)
+[nTrain, ~] = size(data);
+maxIter = 10000;
+errorCriteria = 0.05;
+step = 0.05;
+
+w = w0;
+errorCount = 0;
+sampleCount = 0;
+%data(i,:) = [1 x1 x2 x3 ... xk], which has already included bias term
+for k = 1:maxIter
+    i = randi(nTrain,1);
+    %equivalent to : output = data(i,2:end)*w(2:end) >= -w(1);
+    output = (data(i,:)*w) >= 0;
+    errorCount = errorCount + abs(output - label(i));
+    sampleCount = sampleCount + 1;
+    error = errorCount / sampleCount;
+    
+    %if the training error is below the threshold, stop training
+    if (error ~= 0 && error < errorCriteria)
+        display(k);
+        break;
+    end
+    %update the weight
+    w = w + step*(label(i) - output)*data(i,:)';
+end
+
+
+%%%%%%%%%%%%%perceptronError.m%%%%%%%%%%%%%
+function error = perceptronError(data, label, w)
+errorCount = sum(abs((data*w >= 0) - label));
+error = errorCount / size(data,1);
+\end{lstlisting}
+
+\subsection{Code for Logistic and Softmax Regression}
+\subsubsection{Code for Logistic Regression}
+\begin{lstlisting}
+
+%%%%%%%%%%%%%%%%%%%%%%%% readData.m %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%dependency: readOneMNIST.m
+[trainImages, trainLabels] = readOneMNIST('train-images-idx3-ubyte', 'train-labels-idx1-ubyte', 20000);
+[testImages, testLabels] = readOneMNIST('t10k-images-idx3-ubyte', 't10k-labels-idx1-ubyte', 2000);
+
+save('./data/trainData','trainImages','trainLabels');
+save('./data/testData', 'testImages', 'testLabels');
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%% readOneMNIST.m %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Read 'number' images together with labels from images/labels files
+% Each images is represented as a 28 x 28 + 1= 785 dimension vector where
+% the first element '1' represents the intercept.
+% Each image vector comes with the corresponding label
+%Input:
+%imageFiel: the image files
+%labelFile: the label files
+%radNum: the number of read files
+%Output:
+%images: a number x 785 matrix. Each row represents one image vector
+%labels: labels of selected images
+function [images,labels] = readOneMNIST(imageFile, labelFile, readNum)
+    addpath ../../share/
+    % open and read information of image files
+    fidImage = fopen(imageFile, 'r', 'b');
+    %get the magic number which is 2051 for image file
+    magicNum = fread(fidImage, 1, 'int32');
+    if magicNum ~= 2051
+        error('Invalid image file header');
+    end
+    
+    %how images are there in this data set
+    count = fread(fidImage, 1, 'int32');
+    if count < readNum
+        error('Trying to read too many digits');
+    end
+    
+    %open and read information of label file
+    fidLabel = fopen(labelFile, 'r', 'b');
+    magicNum = fread(fidLabel, 1, 'int32');
+    %get the magic number which is 2049 for label file
+    if magicNum ~= 2049
+        error('Invalid label file header');
+    end
+    count = fread(fidLabel, 1, 'int32');
+    if count < readNum
+        error('Trying to read too many digits');
+    end
+    
+    %get hight and width of each image
+    h = fread(fidImage, 1, 'int32');
+    w = fread(fidImage, 1, 'int32');
+    
+    %images matrix
+    images = zeros(readNum, h*w);
+    %label vector
+    
+    for i=1:readNum
+        oneImage = (fread(fidImage, w*h, 'uint8'));
+        images(i, :) = oneImage;  
+    end
+    images = [ones(size(images,1),1), images / 255];
+    
+    %images = images;
+    
+    labels = fread(fidLabel, readNum, 'uint8');
+    
+    fclose(fidImage);   
+    fclose(fidLabel);   
+end
+
+
+  
+%%%%%%%%%%%%%%%%%%%%%%%HW1Part4.m%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+load('./data/testData.mat');
+load('./data/trainData.mat');
+
+%testProb: each row corresponds to test probability of 10 2-way classifiers for one 
+%test image
+[nTest, nFeature] = size(testImages);
+testProb = zeros(nTest, 10);
+
+threshold = 3*10^-3;
+theta0 = rand(nFeature,1) - 0.5;
+step = 5*10^-6;
+numIter = 2000;
+
+for class =  1:10
+    tic
+    theta = twoWayClassifier(trainImages, trainLabels, theta0, step, numIter,threshold, class);
+    testProb(:,class) = logisticFunc(testImages,theta);
+    toc
+end
+
+save('./data/logisticTestProb', 'testProb');
+twoWayCorrectCount = zeros(1,10);
+
+%(a) compute overal test accuracy
+%voteLabels: the label with largest probability for every class
+[maxProbs, voteLabels] = max(testProb, [], 2);
+overalCorrectCount = sum((voteLabels - 1) == testLabels);
+
+
+%(b)compute two-way classification accuracy
+for class = 1:10
+    thisClass = (testLabels == (class - 1)) & (testProb(:,class) >= 0.5);
+    notThisClass = (testLabels ~= (class - 1)) & (testProb(:,class) < 0.5);
+    twoWayCorrectCount(class) = sum(thisClass | notThisClass);
+end            
+            
+overalCorrectRate = overalCorrectCount / nTest;
+twoWayCorrectRate = sum(twoWayCorrectCount,1) / nTest;  
+
+save('./data/logisticOveralAccuracy','overalCorrectRate');
+save('./data/logisticTwoWayAccuracy','twoWayCorrectRate');
+    
+%%%%%%%%%%%%%%%%%%%%% logisticFunc.m %%%%%%%%%%%%%%%%%%%%%%%%%%
+%return the value of logistic function
+% x: 1 x K
+% theta : K x 1
+function value = logisticFunc(X, theta)
+value = 1./(1 + exp(- X*theta));
+
+%%%%%%%%%%%%%%%%%%%%%% logisticCost.m %%%%%%%%%%%%%%%%%%%%%%%%
+function cost = logisticCost(X,y, theta)
+h_theta = logisticFunc(X,theta);
+cost = -sum(y.*log(h_theta) + (1 - y).*log(1 - h_theta));
+
+%%%%%%%%%%%%%%%%%%%%logisticGradient %%%%%%%%%%%%%%%%%%%%
+function grad = logisticGradient(X,y, theta)
+hx = logisticFunc(X, theta); 
+grad = X'*(hx - y);
+end
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%  LogisticGradientDescent.m %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%the optimal parameters
+%Using gradient descent to compute the optimal paramters for logistic
+%rgression.
+%X is nxm matrix. Each row is one data point and each column is one feature
+%y is nx1 vector representing the labels
+function theta = LogisticGradientDescent(X, y, theta0, ...
+    step, numIter, threshold)
+theta = theta0;
+%threshold = 3*10^-3;
+%numIter = 2000;
+%step = 5*10^-6;
+
+for iter = 1:numIter
+    preTheta = theta;
+    %iter;
+    %cost = logisticCost(X, y, theta);
+    gradient = logisticGradient(X,y, theta);
+    %sum(theta)
+    %sum(gradient)
+    %norm(gradient)
+    %logisticGradient(X,y, theta);
+    theta = theta - step*gradient;
+    diff = norm(theta - preTheta);
+    if (diff < threshold)
+        break;
+    end
+    
+end
+end
+
+%%%%%%%%%%%%%%%%%%%%%%%%% twoWayClassifier.m %%%%%%%%%%%%%%%%%%
+function theta = twoWayClassifier(trainData, trainLabel, theta0, step, numIter, threshold, class)
+newLabel = (trainLabel == (class - 1)) * 1;
+theta = LogisticGradientDescent(trainData, newLabel, theta0,step, numIter,threshold);
+\end{lstlisting}
+
+\subsubsection{Code for Softmax Regression}
+\begin{lstlisting}
+%%%%%%%%%%%%%%%%%%%%%% Hw1Part5.m %%%%%%%%%%%%%%%%%%%%%%
+%Dependency: softmaxGradientDescent.m, softmaxAccuracy
+load('./data/testData.mat');
+load('./data/trainData.mat');
+
+[nTrian, nFeature] = size(trainImages);
+K = 10;
+theta0 = rand(K, nFeature) - 0.5;
+step = 5*10^-6;
+threshold = 3*10^-3;
+
+%%part (a)
+numIters = [1 5 10 20 40 80 160 500 1000];
+trainAccuracyIter = zeros(1, length(numIters));
+
+for i = 1:length(numIters)
+    theta = theta0;
+    tic
+    numIter = numIters(i);  
+    for iter = 1:numIter
+        theta = theta - step*softmaxGradient(trainImages,trainLabels, theta, K);
+    end
+    trainAccuracyIter(i) = softmaxAccuracy(trainImages,trainLabels,theta);
+    toc
+end
+save('./data/softmaxTestAccuracyIter','trainAccuracyIter');
+h = plot(numIters, trainAccuracyIter,'linewidth',3);
+xlabel('Number of iteration');
+ylabel('Accuracy');
+set(gca,'fontWeight','bold','FontSize',20,'linewidth',2)
+saveas(h,'./data/accuracyVsIteration.fig');
+
+%%part (b)
+theta = softmaxGradientDescent(trainImages, trainLabels, theta0, step, 2000, threshold, K);
+testAccuracy = softmaxAccuracy(testImages,testLabels,theta);
+save('./data/softmaxTestAccuracy','testAccuracy');
+
+%%%%%%%%%%%%%%%%%% sofmaxFunc.m %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+function prob = softmaxFunc(X,theta,K)
+%prob = P(y^{i} = k|x^{i};theta)                  
+thetaX = exp(theta*X');
+sumThetaX = repmat(sum(thetaX,1),K,1);
+prob = thetaX./sumThetaX;
+end
+
+%%%%%%%%%%%%%%%%%%%%%% softmaxCost.m %%%%%%%%%%%%%%%%%%%%%%%%
+%theta is K x nFeature: each row is the theta  for one specific class
+%X is N x nFeature 
+function cost = softmaxCost(X,y,theta, K)
+%thetaX = exp[ theta_1* x_1, theta_1*x_2, ..., theta_1*x_N;
+%                    .           .         .        .
+%                    .           .         .        .
+%                    .           .         .        .
+%              theta_K* x_1, theta_K* x_1,..., theta_K* x_1;
+%]
+[N, ~] = size(X);                  
+thetaX = exp(theta*X');
+sumThetaX = repmat(sum(thetaX,1),K,1);
+
+Y = repmat(y', K, 1);
+Kmatrix = repmat((0:(K - 1))', 1, N);
+labelLogic = (Y == Kmatrix);
+
+cost = -sum(sum(labelLogic.*(log(thetaX./sumThetaX))));
+
+
+%%%%%%%%%%%%%%%%%%% softmaxGradient.m %%%%%%%%%%%%%%%%%%%
+%theta is K x nFeature: each row is the theta  for one specific class
+%X is N x nFeature 
+function grad = softmaxGradient(X,y,theta, K)
+%thetaX = exp[ theta_1* x_1, theta_1*x_2, ..., theta_1*x_N;
+%                    .           .         .        .
+%                    .           .         .        .
+%                    .           .         .        .
+%              theta_K* x_1, theta_K* x_2,..., theta_K* x_1;
+%]
+
+%prob = P(y^{i} = k|x^{i};theta)                  
+prob = softmaxFunc(X, theta,K);
+
+%labelLogic  = 1{y^{i} = k}
+[N, ~] = size(X);
+labelLogic = (repmat(y', K,1) == repmat((0:(K - 1))',1,N));
+
+%1{y^{i} = k} - P(y^{i} = k|x^{i};theta)
+diff = labelLogic*1 - prob;
+
+%gradient with respect to theta
+grad = -diff*X;
+end
+
+%%%%%%%%%%%%%%%%%% softmaxGradientDescent.m %%%%%%%%%%%%%%%%%%%%%%%
+%theta is  K x nFeature
+%Dependency: softmaxGradient
+function theta  = softmaxGradientDescent(X, y, theta0, step, numIter, threshold, K)
+theta = theta0;
+%numIter = 2000;
+%threshold = 3*10^-3;
+%step = 5*10^-6;
+
+for iter = 1:numIter
+    %iter
+    preTheta = theta;
+    theta = theta - step*softmaxGradient(X,y, theta, K);
+    diff = norm(theta - preTheta,'fro');
+    if (diff < threshold)
+        break;
+    end
+end
+
+%%%%%%%%%%%%%%%%% softmaxAccuracy.m %%%%%%%%%%%%%%%%%%%%
+%Given the classifier, compute the accuracy of this classifier 
+%on the 'data'
+%theta is K x nFeature. Each row is the theta for one class.
+function accuracy = softmaxAccuracy(data,labels,theta)
+
+[nTrain, ~] = size(data);
+correctCount = 0;
+for i = 1:nTrain
+    image = data(i,:);
+    prob = exp(theta*image');
+    [~, maxLabel] = max(prob);
+    if (maxLabel - 1) == labels(i);
+        correctCount = correctCount + 1;
+    end
+end
+accuracy = correctCount / nTrain;
+\end{lstlisting}
+
+%P(X_1<X_2<X_3)=\int
+%\\
+%\textbf{5.3.2} Let $X$ and $Y$ be independent random variables, with $E(X)=1, E(Y)=2, Var(Y)=4.$\\
+%\indent \setlength{\hangindent}{2em} (a) FInd $E(10X^2+8Y^2-XY+8X+5Y-1)$\\
+%\indent \setlength{\hangindent}{2em} (b) Assuming all variables are normally distributed, find$ P(2X>3Y-5)$
+%More text. 
+\end{document}
