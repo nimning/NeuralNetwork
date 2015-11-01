@@ -1,8 +1,10 @@
 import os, struct
+import numpy as np
 from array import array as pyarray 
 from numpy import append, array, int8, uint8, zeros
+from scipy import stats
 
-def load_mnist(dataset="training", digits=None, path=None, asbytes=False, selection=None, return_labels=True, return_indices=False):
+def load_mnist(dataset="training", digits=None, path=None, asbytes=False, selection=None, return_labels=True, return_indices=False, zscore=True, appendOne=True):
     """
     Loads MNIST files into a 3D numpy array.
 
@@ -41,6 +43,10 @@ def load_mnist(dataset="training", digits=None, path=None, asbytes=False, select
         This is valuable only if digits is specified, because in that case it
         can be valuable to know how far
         in the database it reached.
+    zscore : boolean
+        if True, do the zscore transformation for the raw image data. Default is true.
+    appendOne : boolean
+        if True, append one in the front of the image data representing the input to the bias node
 
     Returns
     -------
@@ -104,17 +110,25 @@ def load_mnist(dataset="training", digits=None, path=None, asbytes=False, select
         indices = indices[selection] 
     N = len(indices)
 
-    images = zeros((N, rows, cols), dtype=uint8)
+    images = zeros((N, rows*cols), dtype=uint8)
 
     if return_labels:
         labels = zeros((N), dtype=int8)
     for i, index in enumerate(indices):
-        images[i] = array(images_raw[ indices[i]*rows*cols : (indices[i]+1)*rows*cols ]).reshape((rows, cols))
+        images[i] = array(images_raw[ indices[i]*rows*cols : (indices[i]+1)*rows*cols ]).reshape(1,rows*cols)
         if return_labels:
             labels[i] = labels_raw[indices[i]]
 
     if not asbytes:
-        images = images.astype(float)/255.0
+            images = images.astype(float)/255.0
+
+
+    if zscore:
+        images = zscoreTransform(images);
+
+    if appendOne:
+        images = np.insert(images, 0, 1, axis=1)
+
 
     ret = (images,)
     if return_labels:
@@ -125,3 +139,16 @@ def load_mnist(dataset="training", digits=None, path=None, asbytes=False, select
         return ret[0] # Don't return a tuple of one
     else:
         return ret
+
+def zscoreTransform(data):
+    """
+    Do a z-score transformation for the data such that the mean is 0 and variance is 1.
+    """
+    zscoreData = stats.zscore(data);
+    #convert NaN to zero. NaN mean this feacture is a constant. So this feature is zero after centering
+    zscoreData[np.isnan(zscoreData)] = 0;
+    return zscoreData
+
+if __name__ == '__main__':
+    myTrainData = load_mnist(dataset="training", path='../')
+
