@@ -16,6 +16,7 @@
 *-converted-to.*
 *.ps
 *.eps
+*.png
 
 ## Bib auxiliary files
 *.bbl

@@ -4,7 +4,8 @@ from array import array as pyarray
 from numpy import append, array, int8, uint8, zeros
 from scipy import stats
 
-def load_mnist(dataset="training", digits=None, path=None, asbytes=False, selection=None, return_labels=True, return_indices=False, zscore=True, appendOne=True):
+def load_mnist(dataset="training", digits=None, path=None, asbytes=False, selection=None, 
+    return_labels=True, return_indices=False, zscore=True, appendOne=True, isShuffle=True):
     """
     Loads MNIST files into a 3D numpy array.
 
@@ -47,6 +48,8 @@ def load_mnist(dataset="training", digits=None, path=None, asbytes=False, select
         if True, do the zscore transformation for the raw image data. Default is true.
     appendOne : boolean
         if True, append one in the front of the image data representing the input to the bias node
+    isShuffle : boolean
+        if True, shuffle the data set.
 
     Returns
     -------
@@ -101,13 +104,7 @@ def load_mnist(dataset="training", digits=None, path=None, asbytes=False, select
     images_raw = pyarray("B", fimg.read())
     fimg.close()
 
-    if digits:
-        indices = [k for k in range(size) if labels_raw[k] in digits]
-    else:
-        indices = range(size)
-
-    if selection:
-        indices = indices[selection] 
+    indices = range(size)
     N = len(indices)
 
     images = zeros((N, rows*cols), dtype=uint8)
@@ -122,12 +119,32 @@ def load_mnist(dataset="training", digits=None, path=None, asbytes=False, select
     if not asbytes:
             images = images.astype(float)/255.0
 
-
     if zscore:
         images = zscoreTransform(images);
-
+    #numpy.insert(arr, index, values, axis=None)
     if appendOne:
         images = np.insert(images, 0, 1, axis=1)
+
+    #shuffle the images
+    if isShuffle:
+        np.random.shuffle(indices)
+        images = images[indices]
+        labels = labels[indices]
+
+    
+    #choose images from shuffled images
+    indices = range(size)
+    if digits:
+        indices = [k for k in range(size) if labels[k] in digits]
+    
+    if selection:
+        indices = indices[selection] 
+
+    images = images[indices]
+    labels = labels[indices]
+    
+
+    
 
 
     ret = (images,)
@@ -150,5 +167,14 @@ def zscoreTransform(data):
     return zscoreData
 
 if __name__ == '__main__':
-    myTrainData = load_mnist(dataset="training", path='../')
+    myTrainData = load_mnist(dataset="training", path='../', digits = None, selection = None, zscore = True, isShuffle = True)
+    import matplotlib.pyplot as plt
+
+    images = myTrainData[0]
+    for i in range(4):
+        print i
+        image = images[i]
+        image = image[1:].reshape(28,28)
+        plt.imshow(image, cmap=plt.get_cmap('gray'))
+        plt.show()
 
