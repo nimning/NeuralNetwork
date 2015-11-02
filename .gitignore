@@ -17,6 +17,7 @@
 *.ps
 *.eps
 *.png
+*.jpg
 
 ## Bib auxiliary files
 *.bbl
@@ -139,3 +140,7 @@ sympy-plots-for-*.tex/
 # WinEdt
 *.bak
 *.sav*
+
+
+##Python##
+*.pyc
