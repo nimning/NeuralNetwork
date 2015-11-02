@@ -28,13 +28,14 @@
 \usepackage{array} % for better arrays (eg matrices) in maths
 \usepackage{paralist} % very flexible & customisable lists (eg. enumerate/itemize, etc.)
 \usepackage{verbatim} % adds environment for commenting out blocks of text & for better verbatim
-\usepackage{subfig} % make it possible to include more than one captioned figure/table in a single float
+%\usepackage{subfig} % make it possible to include more than one captioned figure/table in a single float
 \usepackage{amsmath} %amsmath is part of AMS-LATEX bundles
 \usepackage{amssymb}%symble
 \usepackage{amsfonts}%font
 \usepackage{amsthm}%provide theorem package
 \usepackage{graphicx}
 \usepackage{listings}
+\lstset{breaklines} 
 % These packages are all incorporated in the memoir class to one degree or another...
 \usepackage[retainorgcmds]{IEEEtrantools} %In order to use IEEEeqnarray Environment
 \usepackage{graphicx} % support the \includegraphics command and options
@@ -57,6 +58,11 @@
 \usepackage[titles,subfigure]{tocloft} % Alter the style of the Table of Contents
 \renewcommand{\cftsecfont}{\rmfamily\mdseries\upshape}
 \renewcommand{\cftsecpagefont}{\rmfamily\mdseries\upshape} % No bold!
+\usepackage{graphicx} % support the \includegraphics command and options
+\usepackage{subfigure}%put multiple figure together, must use with package {tocloft}
+%\usepackage{subcaption}
+%\usepackage{subcaption}
+
 
 %%%DEFINE UPRIGHT FONT MISSING FUNCTIONS????????????????????
 \DeclareMathOperator{\argh}{argh}
@@ -86,79 +92,22 @@
 
 \begin{document}
 \maketitle
-\section{Perceptron}
+\section{Linear Rgression}
 
 {\bf 1.}
-For 2-D, the decision boundary is 
-\begin{equation}
-w_1x_1 + w_2x_2 = \theta
-\end{equation}
-Assume ${x}$ is a point on the boundary. So, we have 
-\begin{equation}
-w^Tx= \theta
-\end{equation}
-Let $x^0$ be the point from which we want to compute the distance to the line. So, the distance is 
-\begin{IEEEeqnarray*}{rCl}
-\frac{w^\top(x - x^0)}{||w||_2} =  \frac{w^\top x- w^\top x^0}{||w||_2}
-\end{IEEEeqnarray*}
-So, the distance from the origin to the boundary is
-\begin{equation}
-\frac{w^\top x - w^\top0}{||w||_2} = \frac{w^\top x}{||w||_2}
-\end{equation}
+Since $\epsilon \sim  \mathcal{N}(\mu = 0,\sigma^2)$, we have $\mathrm{P}(t|x;\theta) = \mathcal{N}(f(x,\theta), \sigma^2)$. Thus, for iid samples, we have
+\begin{IEEEeqnarray}{rCl}
+\mathrm{P}(T|X;\theta) & = & \prod_{i = 1}^{N}\frac{1}{\sqrt{2\pi\sigma^2}}\mathrm{exp}\left (-\frac{(t^{(i)} - f(x^{(i)},\theta))^2}{2\sigma^2}\right )
+\end{IEEEeqnarray}
+The optimal parameter $\theta$ should maximize the above posterior. Since $\mathbf{log}$ is a monotonically increasing function, it is equivalent to maximize  $\mathrm{log} \ \mathrm{P}(T|X;\theta)$
+\begin{IEEEeqnarray}{rCl}
+\mathrm{log} \ \mathrm{P}(T|X;\theta) & \sim & -\sum_{i = 1}^N(t^{(i)} - f(x^{(i)}, \theta))^2
+\end{IEEEeqnarray}
+which is equivalent to minimize $\sum_{i = 1}^N(t^{(i)} - f(x^{(i)}, \theta))^2$ which is the $\mathrm{SEE}$.
 
-{\bf 2.}
-\begin{enumerate}
-\item[(a)] 
-The learning rule is 
-\begin{equation}
-w_j(t + 1) = w_j(t) + \alpha (Teacher - Output)x_j
-\end{equation}
+In conclusion, in this special problem, minimize the $\mathrm{SSE}$ is equivalent to maximize the posterior of observation.
 
-\item[(b)] 
-The perceptron learning goes as the following:
-\begin{table}[htb]
-\caption{perceptron learning for NAND}
-\centering
-\begin{tabular}{|c|c|c|c|c|c|c|c|}
-\specialrule{.2em}{0em}{0.2em} 
-$x_1$ & $x_2$ & $w_1$ & $w_2$ & $ Net $ & $Output$ & $Teacher$ & $ theta $\\
-\hline
-1 & 1 & 0 & 0 & 0 & 1 & 0 & 0\\
-\hline
-0 & 0 & -1 & -1 & 0 & 0 & 1 & 1\\
-\hline
-0 & 1 & -1 & -1 & -1 & 0 & 1 & 0\\
-\hline
-1 & 1 & -1 & 0 & -1 & 1 & 0 & -1\\
-\hline
-1 & 0 & -2 & -1 & -2 & 0 & 1 & 0\\
-\hline
-- & - & -1 & -1 & - & - & - & -1\\
-\hline
-\end{tabular}
-\label{table:CPTsPolytree}
-\end{table}\\
-The final weights and threshold are $w_1$ = -1, $w_2$ = -1, $theta$ = -1.
 
-\item[(c)]
-This solution is not unique. For example, $w_1 = -2$, $w_2 = -2$, and $\theta = -2$ is another solution. Namely, the solution will  not change if you add same constant to all the parameters.
-
-\item[(d)]
-\begin{enumerate}
-\item[i.]
-See code file 'readProcessData.m' for details. After preprocessing, the data are unitless. If the data have different units, different data points may have very different numerical value but actually represent the same physical measurement.
- Secondly, if the original data is very large, this preprocessing may avoid overflowing and let the learning converge appropriately.
- \item[ii.]
- According to Figure~\ref{scatterPlot}, the class are linearly separable for most feature spaces.
- 
- \item[iii.]
-See code for more details. For the stopping criteria, I choose to stop when the iteration reaches 1000 or the error drops below 0.05, whichever occurs first.
-\item[iv.]
-The test error rate is just 3.33\%
-\item[v.]
-my learning rate is 0.05. When I slightly increase the learning rate, the perceptron learning will converge a little bit fast and vice versa. However, if my learning rate is too large, the learning procedure will not converge.
-\end{enumerate}
-\end{enumerate}
 
 
 \section{Multilayer Perceptron}
@@ -168,6 +117,7 @@ The cross entropy loss function for softmax regression is
 E = -\sum_{l = 0}^{K - 1}1_{\{label = l\}}\mathrm{log} \ y_l
 \end{equation}
 where $y_l = \frac{\mathrm{exp}(a_l)}{\sum_{m = 0}^{K - 1}\mathrm{exp}(a_m)}$
+
 
 For the output layer, we have 
 \begin{IEEEeqnarray}{rCl}
@@ -227,74 +177,101 @@ W_{IH} = W_{IH} + \alpha x^{(i)} \otimes \left ( (y^{'})^{(j)}\odot(W_{HO}\bulle
 \end{IEEEeqnarray}
 
 {\bf (d)}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-{\bf 4.}
 \begin{enumerate}
-\item[(a)]
-The result of the 10 2-way classification is in Table ~\ref{table:2-way}
-\begin{table}[htb]
-\caption{10 2-way classification}
+\item[i.]
+See code 'DataProcess.py' for detail
+\item[ii.]
+I choose a few parameters and the difference is smaller than $10^{-5}$. Since I also get fine results in the following questions, I think my gradient is correct.
+\item[iii.]
+We can see from Figure \ref{fig:notrick} that the training and test accuracy increases rapidly with number of iteration.
+\begin{figure}[h!]
 \centering
-\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|}
-\specialrule{.2em}{0em}{0.2em} 
-$0-all$ & $1-all$ & $2-all$ & $3-all$ & $ 4-all $ & $5-all$ & $6-all$ & $ 7-all $ & $ 8-all $ & $ 9-all$\\
-\hline
-0.977 & 0.982 & 0.957 & 0.951 & 0.957 & 0.950 & 0.960 & 0.955 & 0.921 & 0.935\\
-\hline
-\end{tabular}
-\label{table:2-way}
-\end{table}
-\item[(b)]
-The overall test accuracy is 0.846.
+\includegraphics[width=1\textwidth]{sigmoid.png}
+\caption{(d).iii. Sigmoid without trick}
+\label{fig:notrick}
+\end{figure} 
 \end{enumerate}
 
-{\bf 5.}
+{\bf (e)}
+From Figure~\ref{fig:reg}, we can see that with regularization, the accuracy also increases rapidly with number of iterations. Large regularization can prevent from overfitting but make the model less powerful. With regularization, the gradient converges faster than the one without any trick. However, as regularization parameter increases, the accuracy decreases a little bit because the model is less powerful.
+ \begin{figure}[h!]
+\centering
+\subfigure[regularization: 0.001]{%
+  \includegraphics[width=0.8\textwidth]{regularization1.png}
+  \label{fig:reg1}}
+\quad
+\subfigure[regularization: 0.0001]{%
+  \includegraphics[width=0.8\textwidth]{regularization2.png}
+  \label{fig:reg2}}
+\caption{(e). Different regularization}
+\label{fig:reg}
+\end{figure}
+
+{\bf (f)}
+From Figure~\ref{fig:momentum}, the accuracy also increases with number of iterations but increases slower than previous cases. This is because momentum intends to dump big jumps during gradient descent process.
+\begin{figure}[h!]
+\centering
+\includegraphics[width=1\textwidth]{momentum.png}
+\caption{(f). With momentum}
+\label{fig:momentum}
+\end{figure} 
+
+
+{\bf (g)}
+Figure~\ref{fig:fun} shows how accuracy changes with number of iteration for different functions. We can see that $sigmoid$ activation function converges more quickly than $tanh$ and $ReLu$, and $tanh$ converges quicker than $ReLu$. This is because $ReLu$ is a linear increasing function, while $sigmod$ and $tanh$ are nonlinear functions and become saturated when input is large 
+\begin{figure}[h!]
+\centering
+\subfigure[sigmoid]{%
+  \includegraphics[width=0.5\textwidth]{sigmoid.png}
+  \label{fig:sigmoid}}
+\quad
+\subfigure[tanh]{%
+  \includegraphics[width=0.5\textwidth]{tanh.png}
+  \label{fig:tanh}}
+\quad
+\subfigure[ReLu]{%
+  \includegraphics[width=0.5\textwidth]{ReLu.png}
+  \label{fig:relu}}
+\caption{(g). Different activation functions}
+\label{fig:fun}
+\end{figure}
+
+{\bf (h)}
 \begin{enumerate}
-\item[(a)]
+\item[i.]
+From Figure~\ref{fig:numhidden}, we can see that the accuracy increases with number of hidden units. It makes sense because the neural network becomes more powerful when the number of hidden units is larger. However, we can see that the accuracy improvement is very small. So, it is not always necessary to have a very large number of hidden units to increase slight accuracy but sacrifice a lot of computational time.
 
+\begin{figure}[h!]
+\centering
+\subfigure[Half hidden units]{%
+  \includegraphics[width=0.8\textwidth]{HalfHiddenUnits.png}
+  \label{fig:half}}
+\quad
+\subfigure[Double hidden units]{%
+  \includegraphics[width=0.8\textwidth]{DoubleHiddenUnits.png}
+  \label{fig:double}}
+\caption{(h).i. Different number of hidden units}
+\label{fig:numhidden}
+\end{figure}
 
-\item[(b)]
-The test accuracy on the test data is 0.860.
-
-\item[(c)]
-The test accuracy is a little bit hight than the one-vs-all logistic regression. It is because softmax regression can directly computes the probability of each class, and then vote for the one with highest probability. So, softmax regression will provide a little bit more accurate result. 
+\item[ii.]
+From Figure~\ref{fig:twolayer}, we can see that, though the number of weights are similar, the accuracy increases with number of layers. Although, this double hidden layer network has similar number of weight, it has more complicated structure, and thus provides more powerful representation. So, when increasing hidden units does not increase the accuracy significantly, we can consider changing the structure of the network.
+\begin{figure}[h!]
+\centering
+\includegraphics[width=1\textwidth]{twoHiddenLayer.png}
+\caption{(h).ii. Two Hidden Layer }
+\label{fig:twolayer}
+\end{figure} 
 \end{enumerate}
-
 
 
 \newpage
+\newpage
+
 \section{Appendix}
 The following is the  source code\\
-\begin{lstlisting}
-\end{lstlisting}
-
-%P(X_1<X_2<X_3)=\int
-%\\
-%\textbf{5.3.2} Let $X$ and $Y$ be independent random variables, with $E(X)=1, E(Y)=2, Var(Y)=4.$\\
-%\indent \setlength{\hangindent}{2em} (a) FInd $E(10X^2+8Y^2-XY+8X+5Y-1)$\\
-%\indent \setlength{\hangindent}{2em} (b) Assuming all variables are normally distributed, find$ P(2X>3Y-5)$
-%More text. 
+\lstinputlisting[language=Python]{DataProcess.py}
+\lstinputlisting[language=Python]{FunctionGradient.py}
+\lstinputlisting[language=Python]{multilayerNN.py}
+\lstinputlisting[language=Python]{twoHiddenLayerNN.py}
 \end{document}

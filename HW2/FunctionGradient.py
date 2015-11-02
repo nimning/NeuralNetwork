@@ -1,10 +1,25 @@
+################## FunctionGradient ###################
 import numpy as np 
 
-def SoftMaxFunc(input):
-	return np.exp(input) / sum(np.exp(input))
+def SoftMaxFunc(inputValue):
+	return np.exp(inputValue) / sum(np.exp(inputValue))
 
-def tanh(input):
-	return np.tanh(input)
+def tanh(inputValue):
+	return np.tanh(inputValue)
 
-def tanhGradient(input):
-	1 - np.multiply(tanh(input),tanh(input))
+def tanhGradient(inputValue):
+	return 1 - np.multiply(tanh(inputValue),tanh(inputValue))
+
+def sigmoid(inputValue):
+	return 1.0 / (1 + np.exp(-inputValue))
+
+def sigmoidGradient(inputValue):
+	return np.multiply(sigmoid(inputValue), 1 - sigmoid(inputValue))
+
+def ReLu(inputValue):
+	return np.maximum(0, inputValue)
+
+def ReLuGradient(inputValue):
+	slope = np.ones(inputValue.shape)
+	slope[inputValue <= 0] = 0
+	return slope
