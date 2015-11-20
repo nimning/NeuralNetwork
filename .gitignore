@@ -1,3 +1,5 @@
+## key
+*.pem
 ## original data
 *.gz
 *-ubyte
